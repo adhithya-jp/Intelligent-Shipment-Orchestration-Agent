@@ -29,8 +29,12 @@ async def lifespan(app: FastAPI):
 def setup_routers(app: FastAPI):
     from app.routes.ai import router as ai_router
     from app.routes import auth
+    from app.routes.analytics import router as analytics_router
+    from app.routes.shipments import router as shipments_router
     app.include_router(ai_router)
     app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
+    app.include_router(analytics_router)
+    app.include_router(shipments_router)
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

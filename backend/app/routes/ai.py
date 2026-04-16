@@ -99,11 +99,39 @@ async def analyze_route_endpoint(request: RouteIntelligenceRequest):
         # Step 2: Send to GPT-4o for analysis
         analysis = await analyze_route(intelligence)
 
+        # Step 3: Save to active_routes collection in MongoDB
+        route_id = None
+        try:
+            from app.core.database import get_db
+            from datetime import datetime, timezone
+            import uuid
+            
+            db = get_db()
+            route_id = str(uuid.uuid4())
+            route_doc = {
+                "id": route_id,
+                "origin": request.origin,
+                "destination": request.destination,
+                "weight_kg": request.weight_kg,
+                "sla_days": request.sla_days,
+                "budget": request.budget,
+                "status": "Optimization Complete",
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "analysis_summary": analysis.get("executive_summary", "No summary available"),
+                "recommended_mode": analysis.get("recommended_mode", "UNKNOWN"),
+                "estimated_cost_usd": analysis.get("estimated_cost_usd", 0),
+                "full_analysis": analysis
+            }
+            db.active_routes.insert_one(route_doc)
+        except Exception as db_err:
+            print(f"Failed to save route to DB: {db_err}")
+
         return {
             "status": "success",
             "data": {
                 "intelligence": intelligence,   # Per-API raw results
                 "analysis": analysis,           # GPT-4o structured analysis
+                "route_id": route_id            # Reference to saved DB item or None
             }
         }
 

@@ -120,6 +120,29 @@ async def fetch_route_intelligence(
     # Key by api name for easy frontend consumption
     results = {r["api"]: r for r in results_list}
 
+    # ── Passive Caching for Dashboard ───────────────────────────────────────
+    try:
+        from app.core.database import get_db
+        import time
+        db = get_db()
+        cache_count = 0
+        for r in results_list:
+            if r["status"] == "ok" and r["data"]:
+                db.live_intelligence.update_one(
+                    {"api_key": r["api"]},
+                    {"$set": {
+                        "data": r["data"],
+                        "timestamp": time.time(),
+                        "location_ref": origin if "origin" in r["api"] else destination
+                    }},
+                    upsert=True
+                )
+                cache_count += 1
+        if cache_count > 0:
+            log.info(f"Cached {cache_count} API results natively for Dashboard sync.")
+    except Exception as e:
+        log.warning(f"Failed to cache intelligence results: {str(e)}")
+
     # Summary counts
     ok_count = sum(1 for r in results_list if r["status"] == "ok")
     err_count = len(results_list) - ok_count
@@ -137,3 +160,4 @@ async def fetch_route_intelligence(
         "apis_failed": err_count,
         "results": results,
     }
+

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -129,9 +130,12 @@ const IntelligencePanel = ({
     );
 };
 
+
 // ── Main Page ───────────────────────────────────────────────────────────────
 
 const NewRoutingRequest = () => {
+    const navigate = useNavigate();
+    
     const [prompt, setPrompt] = useState('');
     const [isParsing, setIsParsing] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
@@ -202,13 +206,9 @@ const NewRoutingRequest = () => {
             });
 
             if (response.data?.data) {
-                // intelligence = per-API results for the confirmation panel
-                // analysis = GPT-4o structured report (will be used in display phase)
-                const { intelligence: intel } = response.data.data;
-                setIntelligence(intel as IntelligencePayload);
-
-                // Log analysis to console for now (display phase comes next)
-                console.log('=== GPT-4o ROUTE ANALYSIS ===', response.data.data.analysis);
+                const { analysis: gptAnalysis } = response.data.data;
+                // Navigate to the full report page, passing the analysis via router state
+                navigate('/optimization', { state: { analysis: gptAnalysis } });
             }
         } catch (error) {
             console.error('Intelligence fetch / analysis failed:', error);
@@ -405,6 +405,8 @@ const NewRoutingRequest = () => {
                     onClose={() => setIntelligence(null)}
                 />
             )}
+
+            {/* Removed the localized AnalysisReport since it now redirects to /optimization */}
         </div>
     );
 };

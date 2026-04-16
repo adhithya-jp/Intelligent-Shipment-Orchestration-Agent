@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import NewRoutingRequest from './pages/NewRoutingRequest';
+import OptimizationResult from './pages/OptimizationResult';
+import ActiveRoutes from './pages/ActiveRoutes';
 import MainLayout from './layouts/MainLayout';
 import './index.css';
 
@@ -27,9 +29,8 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/new-request" element={<NewRoutingRequest />} />
             
-            {/* Placeholder Routes */}
-            <Route path="/routes" element={<Placeholder title="Active Routes" />} />
-            <Route path="/optimization" element={<Placeholder title="AI Optimization" />} />
+            <Route path="/routes" element={<ActiveRoutes />} />
+            <Route path="/optimization" element={<OptimizationResult />} />
             <Route path="/analytics" element={<Placeholder title="Analytics" />} />
             <Route path="/settings" element={<Placeholder title="Settings" />} />
         </Route>

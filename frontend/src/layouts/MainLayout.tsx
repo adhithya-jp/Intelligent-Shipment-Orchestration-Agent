@@ -5,7 +5,7 @@ const MainLayout = () => {
     return (
         <div className="bg-background text-on-background selection:bg-primary/30 min-h-screen flex">
             {/* SideNavBar */}
-            <aside className="hidden md:flex h-screen w-72 sticky left-0 bg-white/60 backdrop-blur-xl flex-col p-6 z-[60]">
+            <aside className="print:hidden hidden md:flex h-screen w-72 sticky left-0 bg-white/60 backdrop-blur-xl flex-col p-6 z-[60]">
                 <div className="mb-10">
                     <span className="text-2xl font-black bg-gradient-to-br from-blue-400 to-purple-500 bg-clip-text text-transparent">Orchestrator</span>
                     <p className="text-xs font-medium tracking-widest text-primary uppercase mt-1 opacity-60">Shipment Command</p>
@@ -41,7 +41,7 @@ const MainLayout = () => {
 
             <main className="flex-1 flex flex-col min-w-0">
                 {/* TopNavBar */}
-                <header className="w-full sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-900/10 flex justify-between items-center px-8 py-4 shadow-2xl shadow-slate-300/30">
+                <header className="print:hidden w-full sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-900/10 flex justify-between items-center px-8 py-4 shadow-2xl shadow-slate-300/30">
                     <div className="flex items-center gap-8">
                         <h1 className="text-xl font-bold tracking-tighter text-slate-900 font-headline hidden sm:block">Orchestration Agent</h1>
                         <div className="hidden lg:flex items-center bg-surface-container-lowest rounded-full px-4 py-1.5 border border-outline-variant/15">

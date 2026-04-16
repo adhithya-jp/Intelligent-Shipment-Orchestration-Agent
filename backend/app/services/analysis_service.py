@@ -149,6 +149,7 @@ Using this data, produce your analysis in the following exact JSON structure:
     "contingency": <number>
   },
   "estimated_transit_days": <number>,
+  "estimated_distance_km": <number>,
   "sla_feasibility": "ON_TRACK | AT_RISK | BREACHED",
   "sla_reasoning": "Explanation of SLA status.",
   "carbon_footprint_kg_co2": <number>,

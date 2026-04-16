@@ -140,6 +140,7 @@ const NewRoutingRequest = () => {
     const [prompt, setPrompt] = useState('');
     const [isParsing, setIsParsing] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
+    const [isDirectExecuting, setIsDirectExecuting] = useState(false);
     const [intelligence, setIntelligence] = useState<IntelligencePayload | null>(null);
 
     const [formData, setFormData] = useState({
@@ -224,6 +225,54 @@ const NewRoutingRequest = () => {
         }
     };
 
+    // ── Direct Execution (Autofill + Analyze in 1 click) ──────────────────────
+    const runDirectExecute = async () => {
+        if (!prompt.trim()) return;
+        setIsDirectExecuting(true);
+        
+        try {
+            // 1. NLP extraction
+            const parseResponse = await axios.post('http://localhost:8000/api/ai/parse-routing', { prompt });
+            if (!parseResponse.data?.data) throw new Error("Parsing failed");
+            
+            const parsed = parseResponse.data.data;
+            
+            // Hydrate UI in background
+            setFormData({
+                origin: parsed.origin || '',
+                destination: parsed.destination || '',
+                cargo_type: parsed.cargo_type || '',
+                weight: parsed.weight || '',
+                sla: parsed.sla || '',
+                budget: parsed.budget || '',
+                currency: parsed.currency || 'USD',
+            });
+
+            // 2. Direct to Route Analysis
+            setIsFetching(true);
+            const analysisResponse = await axios.post('http://localhost:8000/api/ai/analyze-route', {
+                origin: parsed.origin,
+                destination: parsed.destination,
+                cargo_type: parsed.cargo_type || 'General Cargo',
+                weight_kg: parseFloat(parsed.weight) || 0,
+                sla_days: parseInt(parsed.sla) || 0,
+                budget: parseFloat(parsed.budget) || 0,
+                currency: parsed.currency || 'USD',
+            });
+            
+            if (analysisResponse.data?.data) {
+                const { analysis: gptAnalysis } = analysisResponse.data.data;
+                navigate('/optimization', { state: { analysis: gptAnalysis } });
+            }
+        } catch (error) {
+            console.error('Direct execution failed:', error);
+            alert('Direct execution failed. See console for details.');
+        } finally {
+            setIsDirectExecuting(false);
+            setIsFetching(false);
+        }
+    };
+
     return (
         <div className="w-full max-w-4xl mx-auto space-y-6">
             {/* Page header */}
@@ -258,22 +307,41 @@ const NewRoutingRequest = () => {
                             onChange={handlePromptChange}
                         />
                     </div>
-                    <button
-                        type="button"
-                        onClick={runAIParsing}
-                        disabled={isParsing || !prompt.trim()}
-                        className={`h-[74px] px-6 rounded-xl flex flex-col items-center justify-center gap-1 transition-all ${isParsing
-                                ? 'bg-secondary/20 text-secondary'
-                                : 'bg-secondary/10 hover:bg-secondary/20 text-secondary border border-secondary/30 active:scale-95'
-                            }`}
-                    >
-                        <span className={`material-symbols-outlined ${isParsing ? 'animate-spin' : ''}`}>
-                            {isParsing ? 'sync' : 'smart_toy'}
-                        </span>
-                        <span className="text-xs font-bold uppercase tracking-wider">
-                            {isParsing ? 'Extracting...' : 'Autofill'}
-                        </span>
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            type="button"
+                            onClick={runAIParsing}
+                            disabled={isParsing || isDirectExecuting || !prompt.trim()}
+                            className={`h-[74px] px-6 rounded-xl flex flex-col items-center justify-center gap-1 transition-all ${isParsing
+                                    ? 'bg-secondary/20 text-secondary'
+                                    : 'bg-secondary/10 hover:bg-secondary/20 text-secondary border border-secondary/30 active:scale-95'
+                                }`}
+                        >
+                            <span className={`material-symbols-outlined ${isParsing ? 'animate-spin' : ''}`}>
+                                {isParsing ? 'sync' : 'smart_toy'}
+                            </span>
+                            <span className="text-xs font-bold uppercase tracking-wider">
+                                {isParsing ? 'Ext...' : 'Autofill'}
+                            </span>
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={runDirectExecute}
+                            disabled={isParsing || isDirectExecuting || !prompt.trim()}
+                            className={`h-[74px] px-6 rounded-xl flex flex-col items-center justify-center gap-1 transition-all ${isDirectExecuting
+                                    ? 'bg-primary/20 text-primary'
+                                    : 'bg-primary hover:bg-primary/90 text-on-primary border border-primary/30 active:scale-95 shadow-lg shadow-primary/20'
+                                }`}
+                        >
+                            <span className={`material-symbols-outlined ${isDirectExecuting ? 'animate-spin' : ''}`}>
+                                {isDirectExecuting ? 'sync' : 'rocket_launch'}
+                            </span>
+                            <span className="text-xs font-bold uppercase tracking-wider">
+                                {isDirectExecuting ? 'Exe...' : 'Direct Launch'}
+                            </span>
+                        </button>
+                    </div>
                 </div>
             </div>
 

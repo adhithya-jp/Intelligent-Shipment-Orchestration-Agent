@@ -44,7 +44,7 @@ const OptimizationResult = () => {
     return (
         <div className="w-full max-w-5xl mx-auto space-y-6">
              <div className="flex items-center gap-4 mb-4">
-                <button onClick={() => navigate('/new-request')} className="w-10 h-10 rounded-lg bg-surface-container-high border border-slate-900/5 flex items-center justify-center text-outline hover:text-on-surface hover:bg-slate-900/5 transition-all">
+                <button onClick={() => navigate('/new-request')} className="print:hidden w-10 h-10 rounded-lg bg-surface-container-high border border-slate-900/5 flex items-center justify-center text-outline hover:text-on-surface hover:bg-slate-900/5 transition-all">
                     <span className="material-symbols-outlined font-bold">arrow_back</span>
                 </button>
                 <h2 className="text-3xl font-extrabold tracking-tight text-on-surface font-headline">
@@ -52,8 +52,8 @@ const OptimizationResult = () => {
                 </h2>
             </div>
             
-            <div className="bg-surface-container-low border border-slate-900/5 rounded-2xl overflow-hidden shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-6 border-b border-slate-900/5">
+            <div className="print:shadow-none print:border-none print:bg-white bg-surface-container-low border border-slate-900/5 rounded-2xl overflow-hidden shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <div className="print:bg-none bg-gradient-to-r from-primary/10 to-secondary/10 p-6 border-b border-slate-900/5">
                     <div className="flex justify-between items-start">
                         <div>
                             <div className="flex items-center gap-2 mb-1">
@@ -93,6 +93,12 @@ const OptimizationResult = () => {
                                 <div className="flex justify-between text-sm">
                                     <span className="text-outline">Transit Time</span>
                                     <span className="text-on-surface font-bold">{data.estimated_transit_days} Days</span>
+                                </div>
+                                <div className="mt-4 pt-4 border-t border-slate-900/10 flex justify-between items-center bg-primary/5 rounded-lg p-3">
+                                    <span className="text-xs font-black text-primary uppercase tracking-widest">Est. Path Distance</span>
+                                    <span className="text-xl font-bold tracking-tighter text-primary whitespace-nowrap">
+                                        {data.estimated_distance_km ? data.estimated_distance_km.toLocaleString() : "..."} <span className="text-sm font-normal opacity-70">km</span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -201,8 +207,8 @@ const OptimizationResult = () => {
                 
                 <div className="bg-surface-container-highest/30 p-4 border-t border-slate-900/5 flex items-center justify-between">
                     <p className="text-[9px] text-outline font-mono">HASH: {Math.random().toString(16).substring(2, 10).toUpperCase()} | COGNITIVE_ENGINE: ORCHESTRATOR_AI</p>
-                    <div className="flex items-center gap-4">
-                        <button className="text-[10px] font-bold text-outline hover:text-on-surface transition-colors flex items-center gap-1">
+                    <div className="flex items-center gap-4 print:hidden">
+                        <button onClick={() => window.print()} className="text-[10px] font-bold text-outline hover:text-on-surface transition-colors flex items-center gap-1">
                             <span className="material-symbols-outlined text-sm">download</span> Export PDF
                         </button>
                         <button className="px-6 py-2 bg-gradient-to-r from-primary to-secondary text-primary-content text-[11px] uppercase tracking-widest font-black rounded-lg hover:brightness-125 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] active:scale-95 transition-all">

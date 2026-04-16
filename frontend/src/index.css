@@ -1,1 +1,55 @@
 @import "tailwindcss";
+
+@theme {
+  --color-background: #0b1326;
+  --color-surface: #0b1326;
+  --color-primary: #a4c9ff;
+  --color-secondary: #fbabff;
+  --color-surface-dim: #0b1326;
+  --color-surface-container-lowest: #060e20;
+  --color-surface-container: #171f33;
+  --color-surface-container-high: #222a3d;
+  --color-surface-container-highest: #2d3449;
+  --color-surface-variant: #2d3449;
+  --color-primary-container: #60a5fa;
+  --color-secondary-container: #ae05c6;
+  --color-tertiary-container: #909aff;
+  --color-on-primary: #00315d;
+  --color-on-primary-container: #003a6b;
+  --color-on-surface: #dae2fd;
+  --color-on-surface-variant: #c1c7d3;
+  --color-outline: #8b919d;
+  --color-outline-variant: #414751;
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+
+  --font-headline: "Plus Jakarta Sans", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Inter", sans-serif;
+}
+
+@layer utilities {
+  .glass-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .glass-shimmer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(164, 201, 255, 0.05),
+        transparent
+    );
+    transform: skewX(-25deg);
+    transition: 0.75s;
+  }
+  .glass-shimmer:hover::before {
+    left: 125%;
+  }
+}

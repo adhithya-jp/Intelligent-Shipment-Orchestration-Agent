@@ -12,13 +12,27 @@ from app.core.logger import log, request_id_ctx_var
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: Connect to MongoDB
-    mongo_singleton.connect(uri=settings.MONGO_URI, db_name=settings.DB_NAME)
+    try:
+        mongo_singleton.connect(uri=settings.MONGO_URI, db_name=settings.DB_NAME)
+        log.info("Successfully connected to MongoDB")
+    except Exception as e:
+        log.error(f"Failed to connect to MongoDB, running in degraded mode! Error: {str(e)}")
+    
     yield
+    
     # Shutdown: Close MongoDB connection
-    mongo_singleton.disconnect()
+    try:
+        mongo_singleton.disconnect()
+    except Exception:
+        pass
 
-# TODO: Import your routers here as they are built
-# from app.routes import auth, shipment, user, analytics, health
+def setup_routers(app: FastAPI):
+    # Ignore missing auth routes for now since that's a previous refactor
+    # from app.routes import auth, shipment, ai
+    from app.routes.ai import router as ai_router
+    
+    # Example placeholder: app.include_router(auth.router)
+    app.include_router(ai_router)
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -26,6 +40,9 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan
 )
+
+# Initialize loaded routers
+setup_routers(app)
 
 @app.middleware("http")
 async def add_request_id_middleware(request: Request, call_next):

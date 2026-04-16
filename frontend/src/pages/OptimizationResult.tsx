@@ -113,16 +113,29 @@ const OptimizationResult = () => {
                                 ))}
                             </div>
                         </div>
+
+                        {data.carbon_footprint_kg_co2 && (
+                            <div className="bg-emerald-500/5 rounded-xl p-5 border border-emerald-500/20 flex items-center justify-between">
+                                <div>
+                                    <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1">Carbon Footprint Est.</p>
+                                    <p className="text-lg font-bold text-emerald-500 flex items-center gap-1">
+                                        <span className="material-symbols-outlined text-sm">eco</span>
+                                        {data.carbon_footprint_kg_co2.toLocaleString()} <span className="text-xs text-emerald-600/70">kg CO₂</span>
+                                    </p>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Risk & Confidence Section */}
                     <div className="space-y-6">
                         <div className="bg-slate-900/5 rounded-xl p-5 border border-slate-900/5 h-full">
                             <p className="text-[10px] font-black text-outline uppercase tracking-widest mb-6 text-center">Risk Vector Analysis</p>
-                            <div className="flex justify-around items-center py-4">
+                            <div className="flex justify-around items-center py-4 flex-wrap gap-4">
                                 <ProgressCircle percentage={data.risk_assessment?.overall === 'LOW' ? 20 : data.risk_assessment?.overall === 'MEDIUM' ? 50 : 85} color={riskColors[data.risk_assessment?.overall] || 'text-primary'} label="Overall" />
                                 <ProgressCircle percentage={data.risk_assessment?.weather_risk === 'LOW' ? 15 : 70} color={riskColors[data.risk_assessment?.weather_risk] || 'text-blue-400'} label="Weather" />
                                 <ProgressCircle percentage={data.risk_assessment?.port_risk === 'LOW' ? 25 : 60} color={riskColors[data.risk_assessment?.port_risk] || 'text-cyan-400'} label="Ports" />
+                                <ProgressCircle percentage={data.risk_assessment?.customs_compliance === 'LOW' ? 10 : 65} color={riskColors[data.risk_assessment?.customs_compliance] || 'text-purple-400'} label="Customs" />
                             </div>
 
                             <div className="mt-8 space-y-3">
@@ -149,6 +162,28 @@ const OptimizationResult = () => {
                                     </div>
                                 ))}
                             </div>
+
+                            {data.route_waypoints && data.route_waypoints.length > 0 && (
+                                <div className="mt-6">
+                                    <p className="text-[10px] font-black text-outline uppercase tracking-widest mb-4">Strategic Routing Path</p>
+                                    <div className="relative border-l border-slate-900/10 ml-3 space-y-4 pb-2">
+                                        {data.route_waypoints.map((wp: any, i: number) => (
+                                            <div key={i} className="relative pl-6">
+                                                <div className="absolute -left-[5px] top-1 w-2.5 h-2.5 rounded-full bg-surface border-2 border-primary" />
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-xs font-bold text-on-surface">{wp.node}</span>
+                                                    <span className="text-[9px] bg-slate-900/5 text-on-surface-variant px-2 py-0.5 rounded-full uppercase font-bold">{wp.transport_mode}</span>
+                                                </div>
+                                                <p className="text-[11px] text-outline mt-1">{wp.status_note}</p>
+                                                {wp.estimated_delay_hours > 0 && (
+                                                    <p className="text-[10px] text-error mt-0.5 font-bold">Est. Delay: {wp.estimated_delay_hours} hrs</p>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                             {data.alerts?.length > 0 && (
                                 <div className="mt-6 p-4 rounded-xl bg-error/10 border border-error/20 flex gap-3">
                                     <span className="material-symbols-outlined text-error text-sm">priority_high</span>

@@ -33,6 +33,7 @@ const API_META: Record<string, { label: string; icon: string; color: string }> =
     port_destination: { label: 'Port Congestion (Destination)', icon: 'anchor', color: 'text-cyan-400' },
     traffic_origin: { label: 'Traffic (Origin)', icon: 'traffic', color: 'text-orange-400' },
     traffic_destination: { label: 'Traffic (Destination)', icon: 'traffic', color: 'text-orange-400' },
+    available_flights: { label: 'Live Air Cargo Routes', icon: 'flight_takeoff', color: 'text-purple-400' },
 };
 
 // ── Sub-components ──────────────────────────────────────────────────────────

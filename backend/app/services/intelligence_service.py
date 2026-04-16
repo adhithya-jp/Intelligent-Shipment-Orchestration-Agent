@@ -41,6 +41,19 @@ PORT_LOCODE_LOOKUP = {
     "new york": "USNYC",
 }
 
+# Airport IATA lookup for AviationStack
+PORT_IATA_LOOKUP = {
+    "dubai": "DXB",
+    "rotterdam": "RTM",
+    "singapore": "SIN",
+    "shanghai": "PVG",
+    "hamburg": "HAM",
+    "los angeles": "LAX",
+    "antwerp": "ANR",
+    "mumbai": "BOM",
+    "new york": "JFK",
+}
+
 
 def _find_port_key(location: str) -> str | None:
     """Find the closest matching port key from a free-text location."""
@@ -114,6 +127,12 @@ async def fetch_route_intelligence(
             tasks.append(_safe("port_destination", ports_api.check_port_congestion(dest_locode)))
         lat, lon = PORT_COORDINATES[dest_port_key]
         tasks.append(_safe("traffic_destination", traffic_api.get_traffic_near_port(lat, lon)))
+
+    if origin_port_key and dest_port_key:
+        origin_iata = PORT_IATA_LOOKUP.get(origin_port_key)
+        dest_iata = PORT_IATA_LOOKUP.get(dest_port_key)
+        if origin_iata and dest_iata:
+            tasks.append(_safe("available_flights", flights_api.get_flights_by_route(origin_iata, dest_iata)))
 
     # Fire everything in parallel
     results_list = await asyncio.gather(*tasks)

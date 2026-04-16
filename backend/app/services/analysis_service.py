@@ -113,6 +113,13 @@ def _build_context_block(intelligence: dict) -> str:
         lines.append(f"Congestion Level: {traffic_dest.get('congestion_level')}")
         lines.append(f"Current Speed: {traffic_dest.get('current_speed_kmph')} km/h (Free Flow: {traffic_dest.get('free_flow_speed_kmph')} km/h)")
 
+    # Flights
+    flights = get_data("available_flights")
+    if flights:
+        lines.append(f"\n=== ACTIVE AIRFREIGHT ROUTES ===")
+        for f in flights[:5]: # Take top 5 flights to keep prompt size manageable
+            lines.append(f"Flight {f.get('flight_iata')} via {f.get('airline')} | Stat: {f.get('status')} | Dep: {f.get('departure_scheduled')} -> Arr: {f.get('arrival_scheduled')}")
+
     # Failed APIs note
     failed = [k for k, v in results.items() if v.get("status") == "error"]
     if failed:
@@ -126,7 +133,9 @@ SYSTEM_PROMPT = """
 You are OrchestratorAI — an expert AI logistics analyst for the Intelligent Shipment Orchestration system.
 Your job is to analyze real-time logistics intelligence data and produce a concise, actionable shipment analysis.
 
-You will receive live data from weather APIs, traffic sensors, port systems, fuel markets, and routing engines.
+You will receive live data from weather APIs, traffic sensors, port systems, fuel markets, flight schedules (AviationStack), and routing engines.
+You must utilize the EXACT data provided (flight IATA numbers, scheduled departure times, port congestion ratios, weather thresholds, etc.) inside your executive summary and recommendations. Do not be vague.
+
 Using this data, produce your analysis in the following exact JSON structure:
 
 {
@@ -142,17 +151,28 @@ Using this data, produce your analysis in the following exact JSON structure:
   "estimated_transit_days": <number>,
   "sla_feasibility": "ON_TRACK | AT_RISK | BREACHED",
   "sla_reasoning": "Explanation of SLA status.",
+  "carbon_footprint_kg_co2": <number>,
+  "route_waypoints": [
+    {
+       "node": "City or Port Name",
+       "transport_mode": "AIR | SEA | GROUND | TRANSSHIPMENT",
+       "estimated_delay_hours": <number>,
+       "status_note": "Brief action or context here"
+    }
+  ],
   "risk_assessment": {
     "overall": "LOW | MEDIUM | HIGH | CRITICAL",
     "weather_risk": "LOW | MEDIUM | HIGH",
     "port_risk": "LOW | MEDIUM | HIGH",
     "traffic_risk": "LOW | MEDIUM | HIGH",
-    "fuel_volatility": "LOW | MEDIUM | HIGH"
+    "fuel_volatility": "LOW | MEDIUM | HIGH",
+    "customs_compliance": "LOW | MEDIUM | HIGH"
   },
   "recommendations": [
-    "Specific, actionable recommendation 1",
-    "Specific, actionable recommendation 2",
-    "Specific, actionable recommendation 3"
+    "Highly detailed operational directive citing exact flight paths, wait times, or weather thresholds.",
+    "Highly detailed operational directive...",
+    "Highly detailed operational directive...",
+    "Highly detailed operational directive..."
   ],
   "alerts": [
     "Any critical alerts or blockers — leave as empty array [] if none"

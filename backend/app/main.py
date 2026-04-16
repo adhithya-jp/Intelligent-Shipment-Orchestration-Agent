@@ -27,17 +27,10 @@ async def lifespan(app: FastAPI):
         pass
 
 def setup_routers(app: FastAPI):
-    # Ignore missing auth routes for now since that's a previous refactor
-    # from app.routes import auth, shipment, ai
     from app.routes.ai import router as ai_router
-    
-    # Example placeholder: app.include_router(auth.router)
+    from app.routes import auth
     app.include_router(ai_router)
-    mongo_singleton.disconnect()
-
-# TODO: Import your routers here as they are built
-from app.routes import auth
-# from app.routes import shipment, user, analytics, health
+    app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -92,8 +85,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Placeholder for routing inclusions
-app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 # app.include_router(shipment.router, prefix="/api/shipments", tags=["Shipments"])
 # app.include_router(user.router, prefix="/api/users", tags=["Users"])
 # app.include_router(analytics.router, prefix="/api/analytics", tags=["Analytics"])

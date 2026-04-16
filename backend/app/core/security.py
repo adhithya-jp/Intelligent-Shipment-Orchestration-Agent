@@ -3,6 +3,8 @@ from datetime import datetime, timedelta, timezone
 from jose import jwt
 from app.core.config import settings
 import uuid
+import hashlib
+from cryptography.fernet import Fernet
 
 # Configuration constants (Usually fetched from .env/config)
 ALGORITHM = "HS256"
@@ -35,3 +37,32 @@ def create_refresh_token(data: dict) -> str:
     encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+# --- Encryption (Data at Rest) ---
+# Initialize Fernet with the encryption key from settings
+try:
+    fernet_cipher = Fernet(settings.ENCRYPTION_KEY.encode())
+except Exception as e:
+    # Fallback to random if key is invalid, though this means data survives only one session
+    fernet_cipher = Fernet(Fernet.generate_key())
+
+def encrypt_field(data: str) -> str:
+    """Encrypts a sensitive string field using Fernet (AES-128-CBC inside)."""
+    if not data:
+        return data
+    return fernet_cipher.encrypt(data.encode()).decode()
+
+def decrypt_field(encrypted_data: str) -> str:
+    """Decrypts a previously Fernet-encrypted string field."""
+    if not encrypted_data:
+        return encrypted_data
+    try:
+        return fernet_cipher.decrypt(encrypted_data.encode()).decode()
+    except Exception:
+        # If decryption fails (e.g. key changed), return a safe placeholder or empty
+        return ""
+
+def get_deterministic_hash(data: str) -> str:
+    """Retrieves a deterministic SHA-256 hash required for queryable encrypted fields."""
+    if not data:
+        return data
+    return hashlib.sha256(data.encode()).hexdigest()

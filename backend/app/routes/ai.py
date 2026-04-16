@@ -35,6 +35,7 @@ class RouteIntelligenceRequest(BaseModel):
     sla_days: int = 0
     budget: float = 0.0
     currency: Optional[str] = "USD"
+    cargo_type: Optional[str] = "General Cargo"
 
 
 @router.post("/fetch-intelligence")
@@ -58,6 +59,7 @@ async def fetch_intelligence(request: RouteIntelligenceRequest):
             sla_days=request.sla_days,
             budget_usd=request.budget,
             currency=request.currency or "USD",
+            cargo_type=request.cargo_type or "General Cargo",
         )
         return {"status": "success", "data": result}
     except Exception as e:
@@ -94,6 +96,7 @@ async def analyze_route_endpoint(request: RouteIntelligenceRequest):
             sla_days=request.sla_days,
             budget_usd=request.budget,
             currency=request.currency or "USD",
+            cargo_type=request.cargo_type or "General Cargo",
         )
 
         # Step 2: Send to GPT-4o for analysis
@@ -112,6 +115,7 @@ async def analyze_route_endpoint(request: RouteIntelligenceRequest):
                 "id": route_id,
                 "origin": request.origin,
                 "destination": request.destination,
+                "cargo_type": request.cargo_type,
                 "weight_kg": request.weight_kg,
                 "sla_days": request.sla_days,
                 "budget": request.budget,

@@ -35,7 +35,7 @@ const ActiveRoutes = () => {
                         Active Shipments Network
                     </h2>
                 </div>
-                <p className="text-[#a4c9ff] opacity-70 text-sm ml-13">
+                <p className="text-primary opacity-70 text-sm ml-13">
                     Overview of all ongoing logistics operations processed by the cognitive engine.
                 </p>
             </div>
@@ -47,7 +47,7 @@ const ActiveRoutes = () => {
                     <span className="text-xs font-bold text-outline uppercase tracking-widest">Hydrating Active Routes...</span>
                 </div>
             ) : routes.length === 0 ? (
-                <div className="w-full py-20 flex flex-col items-center justify-center bg-surface-container-low border border-white/5 rounded-2xl border-dashed">
+                <div className="w-full py-20 flex flex-col items-center justify-center bg-surface-container-low border border-slate-900/5 rounded-2xl border-dashed">
                     <span className="material-symbols-outlined text-4xl text-outline mb-4">route</span>
                     <h3 className="text-xl font-bold text-on-surface mb-2">No Active Shipments</h3>
                     <p className="text-xs text-on-surface-variant mb-6 text-center max-w-md">There are no optimized routes stored in the database right now. Execute a new Route Intelligence attempt to see it appear here.</p>
@@ -61,7 +61,7 @@ const ActiveRoutes = () => {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {routes.map((route, i) => (
-                        <div key={route.id || i} className="bg-surface-container-low border border-white/5 rounded-2xl p-6 shadow-lg hover:border-white/10 transition-colors group">
+                        <div key={route.id || i} className="bg-surface-container-low border border-slate-900/5 rounded-2xl p-6 shadow-lg hover:border-slate-900/10 transition-colors group">
                             
                             <div className="flex items-start justify-between mb-6">
                                 <div className="flex items-center gap-2">
@@ -76,7 +76,7 @@ const ActiveRoutes = () => {
                             </div>
 
                             <div className="flex items-center justify-between mb-6 relative">
-                                <div className="absolute top-1/2 left-0 w-full h-[1px] border-t border-dashed border-white/10 pointer-events-none" />
+                                <div className="absolute top-1/2 left-0 w-full h-[1px] border-t border-dashed border-slate-900/10 pointer-events-none" />
                                 
                                 {/* Origin Node */}
                                 <div className="text-center relative bg-surface-container-low px-2 z-10">
@@ -86,7 +86,7 @@ const ActiveRoutes = () => {
                                 
                                 {/* Center Info */}
                                 <div className="text-center relative z-10 bg-surface-container-low px-4 flex flex-col items-center">
-                                    <span className="material-symbols-outlined text-[10px] text-outline p-1 rounded-full border border-white/10 bg-surface-container-lowest">
+                                    <span className="material-symbols-outlined text-[10px] text-outline p-1 rounded-full border border-slate-900/10 bg-surface-container-lowest">
                                         {route.recommended_mode === 'AIR' ? 'flight' : route.recommended_mode === 'SEA' ? 'directions_boat' : 'local_shipping'}
                                     </span>
                                     <span className="text-[10px] text-primary font-mono mt-1 font-bold">
@@ -101,14 +101,14 @@ const ActiveRoutes = () => {
                                 </div>
                             </div>
                             
-                            <div className="p-4 bg-surface-container-lowest rounded-xl border border-white/5 space-y-2">
+                            <div className="p-4 bg-surface-container-lowest rounded-xl border border-slate-900/5 space-y-2">
                                 <p className="text-[10px] font-black text-outline uppercase tracking-widest">Execution Summary</p>
                                 <p className="text-xs text-on-surface-variant line-clamp-3">
                                     {route.analysis_summary}
                                 </p>
                             </div>
                             
-                            <div className="mt-4 pt-4 border-t border-white/5 flex gap-4 text-[10px] font-bold text-outline uppercase tracking-widest">
+                            <div className="mt-4 pt-4 border-t border-slate-900/5 flex gap-4 text-[10px] font-bold text-outline uppercase tracking-widest">
                                 <span>{route.weight_kg} KG</span>
                                 <span className="opacity-30">•</span>
                                 <span>{route.sla_days} DAYS SLA</span>

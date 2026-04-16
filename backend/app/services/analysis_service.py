@@ -25,6 +25,7 @@ def _build_context_block(intelligence: dict) -> str:
 
     origin = intelligence.get("origin", "Unknown")
     destination = intelligence.get("destination", "Unknown")
+    cargo_type = intelligence.get("cargo_type", "Unknown")
     weight_kg = intelligence.get("weight_kg", 0)
     sla_days = intelligence.get("sla_days", 0)
     budget_usd = intelligence.get("budget_usd", 0)
@@ -32,6 +33,7 @@ def _build_context_block(intelligence: dict) -> str:
     lines.append(f"=== SHIPMENT REQUEST ===")
     lines.append(f"Origin: {origin}")
     lines.append(f"Destination: {destination}")
+    lines.append(f"Cargo Type: {cargo_type}")
     lines.append(f"Cargo Weight: {weight_kg} kg")
     lines.append(f"SLA Deadline: {sla_days} days")
     lines.append(f"Budget: ${budget_usd} USD")
@@ -121,7 +123,7 @@ def _build_context_block(intelligence: dict) -> str:
 
 
 SYSTEM_PROMPT = """
-You are KineticAI — an expert AI logistics analyst for the Intelligent Shipment Orchestration system.
+You are OrchestratorAI — an expert AI logistics analyst for the Intelligent Shipment Orchestration system.
 Your job is to analyze real-time logistics intelligence data and produce a concise, actionable shipment analysis.
 
 You will receive live data from weather APIs, traffic sensors, port systems, fuel markets, and routing engines.

@@ -4,6 +4,7 @@ from typing import Optional
 from pymongo import MongoClient
 from pymongo.database import Database
 from pymongo.errors import ConnectionFailure
+import certifi
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,7 @@ class MongoDBClient:
         if self._client is None:
             try:
                 # serverSelectionTimeoutMS ensures fast failure if DB is unreachable
-                self._client = MongoClient(uri, serverSelectionTimeoutMS=5000)
+                self._client = MongoClient(uri, serverSelectionTimeoutMS=5000, tlsCAFile=certifi.where())
                 # Verify connection
                 self._client.admin.command('ping')
                 self._db = self._client[db_name]

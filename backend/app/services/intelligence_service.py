@@ -71,6 +71,7 @@ async def fetch_route_intelligence(
     sla_days: int,
     budget_usd: float,
     currency: str = "USD",
+    cargo_type: str = "General Cargo",
 ) -> dict:
     """
     Main orchestrator: fires all integrations in parallel.
@@ -152,6 +153,7 @@ async def fetch_route_intelligence(
     return {
         "origin": origin,
         "destination": destination,
+        "cargo_type": cargo_type,
         "weight_kg": weight_kg,
         "sla_days": sla_days,
         "budget_usd": budget_usd,

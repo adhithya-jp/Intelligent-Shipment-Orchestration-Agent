@@ -4,7 +4,7 @@ import axios from 'axios';
 // ── Components ──────────────────────────────────────────────────────────────
 
 const StatCard = ({ label, value, unit, icon, trend, sub }: any) => (
-    <div className="bg-surface-container-low border border-white/5 p-6 rounded-2xl shadow-lg relative overflow-hidden group">
+    <div className="bg-surface-container-low border border-slate-900/5 p-6 rounded-2xl shadow-lg relative overflow-hidden group">
         <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
             <span className="material-symbols-outlined text-4xl">{icon}</span>
         </div>
@@ -97,9 +97,9 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 <section>
                     <SectionHeader title="Latest Port Conditions" icon="anchor" />
-                    <div className="bg-surface-container-low border border-white/5 rounded-2xl overflow-hidden">
+                    <div className="bg-surface-container-low border border-slate-900/5 rounded-2xl overflow-hidden">
                         <table className="w-full text-left text-sm">
-                            <thead className="bg-white/5 text-[10px] font-black text-outline uppercase tracking-widest">
+                            <thead className="bg-slate-900/5 text-[10px] font-black text-outline uppercase tracking-widest">
                                 <tr>
                                     <th className="px-6 py-4">Port / Hub</th>
                                     <th className="px-6 py-4">Status</th>
@@ -107,10 +107,10 @@ const Dashboard = () => {
                                     <th className="px-6 py-4">Activity</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-white/5">
+                            <tbody className="divide-y divide-slate-900/5">
                                 {['port_origin', 'port_destination'].map(key => (
                                     get(key) && (
-                                        <tr key={key} className="hover:bg-white/2 transition-colors">
+                                        <tr key={key} className="hover:bg-slate-900/2 transition-colors">
                                             <td className="px-6 py-4 font-bold text-on-surface">{get(key).port_name}</td>
                                             <td className="px-6 py-4 uppercase text-[10px] font-bold">
                                                 <span className={`px-2 py-1 rounded-full ${get(key).congestion_status === 'NORMAL' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-orange-500/10 text-orange-400'}`}>
@@ -139,7 +139,7 @@ const Dashboard = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {['weather_origin', 'weather_destination'].map(key => (
                             get(key) && (
-                                <div key={key} className="bg-surface-container-low border border-white/5 p-5 rounded-xl flex items-center justify-between">
+                                <div key={key} className="bg-surface-container-low border border-slate-900/5 p-5 rounded-xl flex items-center justify-between">
                                     <div>
                                         <p className="text-[10px] font-black text-outline uppercase mb-1">{key === 'weather_origin' ? 'Origin' : 'Destination'}</p>
                                         <p className="text-sm font-bold text-on-surface uppercase">{get(key).condition}</p>
@@ -154,7 +154,7 @@ const Dashboard = () => {
                             )
                         ))}
                          {!get('weather_origin') && !get('weather_destination') && (
-                             <div className="col-span-2 py-10 text-center text-outline italic border border-dashed border-white/10 rounded-xl">
+                             <div className="col-span-2 py-10 text-center text-outline italic border border-dashed border-slate-900/10 rounded-xl">
                                  Awaiting route intelligence weather sync...
                              </div>
                          )}

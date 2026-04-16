@@ -25,7 +25,7 @@ const LoginPage = () => {
             {/* Main Content Area */}
             <main className="relative z-10 w-full max-w-lg px-6">
                 {/* Cinematic Glass Card */}
-                <div className="bg-surface-variant/20 backdrop-blur-xl rounded-xl border-t border-white/10 shadow-2xl p-8 md:p-12 glass-shimmer">
+                <div className="bg-surface-variant/20 backdrop-blur-xl rounded-xl border-t border-slate-900/10 shadow-2xl p-8 md:p-12 glass-shimmer">
                     {/* Branding Header */}
                     <div className="text-center mb-10">
                         <div className="flex justify-center mb-6">
@@ -37,7 +37,7 @@ const LoginPage = () => {
                             Orchestration Agent
                         </h1>
                         <p className="text-on-surface-variant font-label text-sm uppercase tracking-widest opacity-60">
-                            Kinetic Command Access
+                            Orchestrator Command Access
                         </p>
                     </div>
 
@@ -102,7 +102,7 @@ const LoginPage = () => {
                     {/* Footer Meta */}
                     <div className="mt-8 pt-8 border-t border-outline-variant/10 text-center">
                         <p className="text-outline text-xs">
-                            Protected by Kinetic Multi-Factor Authentication. 
+                            Protected by Orchestrator Multi-Factor Authentication. 
                             <br />
                             Unauthorized access is logged and traced.
                         </p>

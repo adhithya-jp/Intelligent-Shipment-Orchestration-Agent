@@ -76,7 +76,7 @@ const IntelligencePanel = ({
     const resultList = Object.values(payload.results);
 
     return (
-        <div className="bg-surface-container-low border border-white/10 rounded-2xl p-6 space-y-5 relative overflow-hidden shadow-2xl">
+        <div className="bg-surface-container-low border border-slate-900/10 rounded-2xl p-6 space-y-5 relative overflow-hidden shadow-2xl">
             {/* Top accent */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-60" />
 
@@ -111,7 +111,7 @@ const IntelligencePanel = ({
                         ✗ {payload.apis_failed} failed (check API keys in .env)
                     </span>
                 )}
-                <span className="px-3 py-1 bg-white/5 border border-white/10 text-outline text-xs font-bold rounded-full">
+                <span className="px-3 py-1 bg-slate-900/5 border border-slate-900/10 text-outline text-xs font-bold rounded-full">
                     {payload.apis_queried} total queried
                 </span>
             </div>
@@ -144,9 +144,11 @@ const NewRoutingRequest = () => {
     const [formData, setFormData] = useState({
         origin: '',
         destination: '',
+        cargo_type: '',
         weight: '',
         sla: '',
         budget: '',
+        currency: 'USD',
     });
 
     const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -171,9 +173,11 @@ const NewRoutingRequest = () => {
                 setFormData({
                     origin: parsed.origin || '',
                     destination: parsed.destination || '',
+                    cargo_type: parsed.cargo_type || '',
                     weight: parsed.weight || '',
                     sla: parsed.sla || '',
                     budget: parsed.budget || '',
+                    currency: parsed.currency || 'USD',
                 });
             }
         } catch (error) {
@@ -199,10 +203,11 @@ const NewRoutingRequest = () => {
             const response = await axios.post('http://localhost:8000/api/ai/analyze-route', {
                 origin: formData.origin,
                 destination: formData.destination,
+                cargo_type: formData.cargo_type || 'General Cargo',
                 weight_kg: parseFloat(formData.weight) || 0,
                 sla_days: parseInt(formData.sla) || 0,
                 budget: parseFloat(formData.budget) || 0,
-                currency: 'USD',
+                currency: formData.currency || 'USD',
             });
 
             if (response.data?.data) {
@@ -230,7 +235,7 @@ const NewRoutingRequest = () => {
                         Initialize AI Routing
                     </h2>
                 </div>
-                <p className="text-[#a4c9ff] opacity-70 text-sm ml-13">
+                <p className="text-primary opacity-70 text-sm ml-13">
                     Configure logistics parameters for the execution engine to calculate the optimal path.
                 </p>
             </div>
@@ -274,7 +279,7 @@ const NewRoutingRequest = () => {
             <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-6" />
 
             {/* Form */}
-            <div className="bg-surface-container-low border border-white/5 rounded-2xl p-8 relative overflow-hidden shadow-2xl glass-shimmer">
+            <div className="bg-surface-container-low border border-slate-900/5 rounded-2xl p-8 relative overflow-hidden shadow-2xl glass-shimmer">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] pointer-events-none" />
 
                 <form className="space-y-8 relative z-10">
@@ -318,6 +323,24 @@ const NewRoutingRequest = () => {
                         </div>
                     </div>
 
+                    {/* Cargo Type */}
+                    <div className="space-y-2 relative">
+                        <label className="font-label text-xs font-bold text-emerald-400 uppercase tracking-widest ml-1">
+                            Cargo Classification
+                        </label>
+                        <div className="absolute top-1/2 right-4 -translate-y-1/2 pointer-events-none mt-3">
+                            <span className="material-symbols-outlined text-outline">inventory_2</span>
+                        </div>
+                        <input
+                            type="text"
+                            name="cargo_type"
+                            value={formData.cargo_type}
+                            onChange={handleInputChange}
+                            placeholder="e.g. Hazardous Materials, Pharmaceuticals, etc."
+                            className="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-emerald-400 text-on-surface py-3 px-4 rounded-xl transition-all outline-none"
+                        />
+                    </div>
+
                     <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -359,15 +382,26 @@ const NewRoutingRequest = () => {
                             <label className="font-label text-xs font-bold text-primary-fixed-dim uppercase tracking-widest ml-1">
                                 Budget Envelope
                             </label>
-                            <input
-                                type="number"
-                                name="budget"
-                                value={formData.budget}
-                                onChange={handleInputChange}
-                                placeholder="15000"
-                                className="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-primary text-on-surface py-3 pl-8 pr-4 rounded-xl transition-all outline-none"
-                            />
-                            <span className="absolute left-4 top-1/2 mt-3 -translate-y-1/2 text-outline text-sm">$</span>
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    name="currency"
+                                    value={formData.currency}
+                                    onChange={handleInputChange}
+                                    placeholder="USD"
+                                    className="w-20 bg-surface-container-lowest border border-outline-variant/30 focus:border-primary text-on-surface py-3 px-4 rounded-xl transition-all outline-none uppercase"
+                                />
+                                <div className="relative flex-1">
+                                    <input
+                                        type="number"
+                                        name="budget"
+                                        value={formData.budget}
+                                        onChange={handleInputChange}
+                                        placeholder="15000"
+                                        className="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-primary text-on-surface py-3 px-4 rounded-xl transition-all outline-none"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
 

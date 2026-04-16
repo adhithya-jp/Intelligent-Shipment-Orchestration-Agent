@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: shipment-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    networks:
+      - shipment-network
+    volumes:
+      # Syncs your local code to the container so you don't have to rebuild on every edit
+      - ./backend:/app
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: shipment-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      # This points to the backend using local machine porting.
+      # If making server-side api calls, you could use 'http://backend:8000'
+      - VITE_API_URL=http://localhost:8000
+    networks:
+      - shipment-network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # Prevents local node_modules from overriding container node_modules
+    depends_on:
+      - backend
+
+networks:
+  shipment-network:
+    driver: bridge
